@@ -1,0 +1,169 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# Django
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static_collected/
+logs/
+*.pid
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+
+# Database
+*.db
+*.sqlite3
+*.sqlite
+
+# Media files
+media/
+uploads/
+outputs/
+storage/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+*.pid
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.pytest
+*.cover
+.hypothesis/
+
+# Documentation
+docs/_build/
+
+# Package files
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Static files
+staticfiles/
+static_collected/
+
+# Logs
+*.log
+logs/
+
+# Secrets
+*.key
+*.pem
+*.crt
+*.pub
+
+# Docker
+*.pid
+docker-compose.override.yml
+.dockerignore
+
+# Node modules (for future frontend)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+*.swp
+
+# Model files (AI models are large)
+*.pkl
+*.h5
+*.model
+*.bin
+*.onnx
+*.pt
+*.pth
+
+# Training data (exclude large data files)
+data/raw/
+data/processed/
+data/datasets/
+
+# Uploads and temporary files
+storage/
+temp/
+tmp/
+
+# Environment-specific
+.env.production
+.env.staging
+.env.local
+
+# VS Code
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# PyCharm
+.idea/
+*.iml
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pyre
+.pyre/
+
+# pytype
+.pytype/
+
+# Profiling data
+.prof
