@@ -215,7 +215,7 @@ AFROLA/
 │       ├── validators.py
 │       └── youtube_downloader.py
 │   │
-│   └── venv/           # Environment variables
+│   └── venv/           # Virtual environment
 │
 ├── data/                                # Training data (Phase 3)
 │   ├── raw/
@@ -279,13 +279,13 @@ AFROLA/
 │   ├── test_api.py
 │   └── conftest.py
 │
-├── .env                                # Environment variables
-├── .env.example                        # Example environment file
+├── .env                  # Environment variables
+├── .env.example          # Example environment file
 ├── .gitignore
 ├── .dockerignore
 ├── README.md
 ├── LICENSE
 ├── docker-compose.yml
 ├── Dockerfile
-├── Makefile                            # Common commands
-└── pyproject.toml                      # Python project config
+├── Makefile                  # Common commands
+└── pyproject.toml            # Python project config
