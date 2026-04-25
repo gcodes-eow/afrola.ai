@@ -31,7 +31,6 @@ api.RateLimitRule → API rate limiting rules
 
 ### 1. User Model (accounts.User)
 
-
 class User(AbstractUser):
     """Extended user model with subscription and usage tracking"""
     

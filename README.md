@@ -290,7 +290,7 @@ AFROLA/
 ├── Makefile                            # Common commands
 └── pyproject.toml                      # Python project config
 
-# IMPLEMENTATION WORKFLOW DOCUMENTATION (UPDATED)
+# IMPLEMENTATION WORKFLOW DOCUMENTATION
 
 ## Phase 1: Foundation (Week 1)
 1. docs/database-schema.md           # Create all models first
@@ -312,3 +312,6 @@ AFROLA/
 
 ## Phase 5: ML/AI Improvement (Parallel - Week 3+)
 7. docs/training-flow.md             # Can run parallel to other phases
+
+## Phase 6: Deployment
+8. docs/deployment-flow.md    # Using Hetzner Cloud for infrastructure and Appliku for automated deployment
