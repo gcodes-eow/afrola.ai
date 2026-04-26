@@ -1,0 +1,96 @@
+<!-- backend/templates/dashboard/job_detail.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold">{{ job.title|default:"Untitled Job" }}</h1>
+        <a href="{% url 'dashboard:index' %}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+    </div>
+
+    <!-- Job Status -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Job Status</h2>
+        <div class="space-y-3">
+            <p><span class="font-medium">Status:</span>
+                <span class="px-2 py-1 rounded text-sm
+                    {% if job.status == 'completed' %}bg-green-100 text-green-800
+                    {% elif job.status == 'failed' %}bg-red-100 text-red-800
+                    {% elif job.status == 'processing' %}bg-blue-100 text-blue-800
+                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                    {{ job.get_status_display }}
+                </span>
+            </p>
+            <p><span class="font-medium">Type:</span> {{ job.get_job_type_display }}</p>
+            <p><span class="font-medium">Languages:</span> {{ job.source_language }} → {{ job.target_language }}</p>
+            <p><span class="font-medium">Created:</span> {{ job.created_at|date:"F j, Y H:i" }}</p>
+            {% if job.processing_time %}
+                <p><span class="font-medium">Processing Time:</span> {{ job.processing_time|floatformat:1 }}s</p>
+            {% endif %}
+            {% if job.error_message %}
+                <p class="text-red-600"><span class="font-medium">Error:</span> {{ job.error_message }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Progress</h2>
+        <div class="w-full bg-gray-200 rounded-full h-4">
+            <div class="bg-blue-600 h-4 rounded-full transition-all" style="width: {{ job.progress }}%"></div>
+        </div>
+        <p class="text-center text-sm text-gray-500 mt-2">{{ job.progress }}% Complete</p>
+    </div>
+
+    <!-- Results -->
+    {% if job.status == 'completed' %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Results</h2>
+        <div class="space-y-4">
+            {% if job.transcript %}
+            <div>
+                <h3 class="font-medium text-gray-700 mb-2">Transcript</h3>
+                <div class="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto">
+                    <pre class="whitespace-pre-wrap text-sm">{{ job.transcript }}</pre>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if job.translation %}
+            <div>
+                <h3 class="font-medium text-gray-700 mb-2">Translation</h3>
+                <div class="bg-gray-50 p-4 rounded-lg max-h-60 overflow-y-auto">
+                    <pre class="whitespace-pre-wrap text-sm">{{ job.translation }}</pre>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Downloads -->
+            <div class="space-y-2">
+                <h3 class="font-medium text-gray-700">Downloads</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% if job.dubbed_audio %}
+                        <a href="{{ job.dubbed_audio.url }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                            ↓ Dubbed Audio
+                        </a>
+                    {% endif %}
+                    {% if job.dubbed_video %}
+                        <a href="{{ job.dubbed_video.url }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                            ↓ Dubbed Video
+                        </a>
+                    {% endif %}
+                    {% if job.subtitle_file %}
+                        <a href="{{ job.subtitle_file.url }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm">
+                            ↓ Subtitles
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
