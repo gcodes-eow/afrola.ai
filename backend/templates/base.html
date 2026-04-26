@@ -1,0 +1,33 @@
+# backend/templates/base.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+    <meta name="description" content="{{ SITE_DESCRIPTION }}">
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+
+    <!-- Tailwind CSS CDN (replace with local build in production) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    {% include 'includes/navbar.html' %}
+
+    <!-- Messages -->
+    {% include 'includes/messages.html' %}
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include 'includes/footer.html' %}
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -99,12 +99,13 @@ text
 4. User redirected to dashboard
 
 **Settings to verify:**
-```python
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
+
 Batch 4: Protected Views
 Files to create:
 
@@ -122,6 +123,7 @@ from accounts.decorators import subscription_required
 @subscription_required('pro')
 def premium_feature(request):
     pass
+
 Batch 5: Password Reset
 Files to create:
 

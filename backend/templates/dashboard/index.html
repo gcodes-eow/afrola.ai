@@ -1,0 +1,64 @@
+# backend/templates/dashboard/index.html
+
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Welcome, {{ user.full_name }}</h1>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-gray-500 text-sm uppercase">Total Jobs</h3>
+        <p class="text-3xl font-bold">{{ total_jobs }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-gray-500 text-sm uppercase">Completed</h3>
+        <p class="text-3xl font-bold text-green-600">{{ completed_jobs }}</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-gray-500 text-sm uppercase">In Progress</h3>
+        <p class="text-3xl font-bold text-blue-600">{{ processing_jobs }}</p>
+    </div>
+</div>
+
+<!-- Recent Jobs -->
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold mb-4">Recent Jobs</h2>
+    {% if recent_jobs %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b">
+                        <th class="py-2 px-4">Title</th>
+                        <th class="py-2 px-4">Type</th>
+                        <th class="py-2 px-4">Status</th>
+                        <th class="py-2 px-4">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in recent_jobs %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="py-2 px-4">{{ job.title|default:"Untitled" }}</td>
+                        <td class="py-2 px-4">{{ job.get_job_type_display }}</td>
+                        <td class="py-2 px-4">
+                            <span class="px-2 py-1 rounded text-sm
+                                {% if job.status == 'completed' %}bg-green-100 text-green-800
+                                {% elif job.status == 'failed' %}bg-red-100 text-red-800
+                                {% elif job.status == 'processing' %}bg-blue-100 text-blue-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ job.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="py-2 px-4 text-gray-500">{{ job.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-500">No jobs yet. Start by uploading a file!</p>
+    {% endif %}
+</div>
+{% endblock %}

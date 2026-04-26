@@ -17,7 +17,6 @@ class CustomUserAdmin(UserAdmin):
                 'stripe_customer_id',
                 'monthly_processing_seconds',
                 'monthly_jobs_count',
-                'last_reset_date',
             )
         }),
         ('Verification', {

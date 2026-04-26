@@ -1,3 +1,4 @@
+# backend/config/settings.py
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'dashboard.context_processors.user_subscription_info',
             ],
         },
     },
@@ -377,6 +379,16 @@ SESSION_SAVE_EVERY_REQUEST = True
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://localhost:3000').split(',')
 CSRF_COOKIE_HTTPONLY = True
 CSRF_USE_SESSIONS = True
+
+# Auth URLs
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Auth backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Security headers
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # 1 year in production

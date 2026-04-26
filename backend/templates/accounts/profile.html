@@ -1,0 +1,65 @@
+# backend/templates/accounts/profile.html
+
+{% extends 'base.html' %}
+
+{% block title %}Profile - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">My Profile</h1>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Account Information</h2>
+        <div class="space-y-3">
+            <p><span class="font-medium text-gray-700">Email:</span> {{ user.email }}</p>
+            <p><span class="font-medium text-gray-700">Full Name:</span> {{ user.full_name }}</p>
+            <p><span class="font-medium text-gray-700">Member since:</span> {{ user.created_at|date:"F j, Y" }}</p>
+            <p>
+                <span class="font-medium text-gray-700">Email Verified:</span>
+                {% if user.email_verified %}
+                    <span class="text-green-600">✓ Yes</span>
+                {% else %}
+                    <span class="text-red-600">✗ No</span>
+                    <a href="{% url 'accounts:resend_verification' %}" class="text-blue-600 hover:underline ml-2">Resend verification</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Subscription</h2>
+        <p><span class="font-medium text-gray-700">Plan:</span> {{ user.get_subscription_tier_display }}</p>
+        {% if user_subscription %}
+            <p><span class="font-medium text-gray-700">Status:</span> {{ user_subscription.get_status_display }}</p>
+            <p><span class="font-medium text-gray-700">Renews:</span> {{ user_subscription.current_period_end|date:"F j, Y" }}</p>
+            <p><span class="font-medium text-gray-700">Minutes Used:</span> {{ minutes_used }} / {{ minutes_limit }}</p>
+            <p><span class="font-medium text-gray-700">Jobs Used:</span> {{ jobs_used }} / {{ jobs_limit }}</p>
+        {% endif %}
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Update Profile</h2>
+        <form method="post" action="{% url 'accounts:profile_update' %}" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="id_full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" name="full_name" id="id_full_name"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       value="{{ user.full_name }}">
+            </div>
+            <div>
+                <label for="id_avatar" class="block text-sm font-medium text-gray-700 mb-1">Avatar</label>
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="Avatar" class="w-16 h-16 rounded-full mb-2">
+                {% endif %}
+                <input type="file" name="avatar" id="id_avatar"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit"
+                    class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700">
+                Update Profile
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
