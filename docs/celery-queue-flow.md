@@ -245,6 +245,7 @@ def update_progress(job_id, progress, step):
         'step': step,
         'updated_at': timezone.now().isoformat()
     }, timeout=3600)
+
 Batch 5: Queue Priority System
 Queue Configuration:
 

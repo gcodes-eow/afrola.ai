@@ -3,6 +3,7 @@
 from jobs.models import Job
 from ai_engine.tasks import (
     process_audio_to_text_task,
+    process_text_to_text_task,
     process_video_to_text_task,
     process_translation_task,
     process_subtitle_generation_task,
@@ -16,6 +17,7 @@ from ai_engine.tasks import (
 def trigger_job_processing(job):
     """Route job to the correct processing pipeline"""
     task_map = {
+        'text_to_text': process_text_to_text_task,
         'audio_to_text': process_audio_to_text_task,
         'video_to_text': process_video_to_text_task,
         'audio_to_audio': create_dubbed_audio_task,

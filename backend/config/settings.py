@@ -177,12 +177,38 @@ CORS_ALLOW_HEADERS = [
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # Celery Configuration
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', REDIS_URL)
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'django-db')  # Use django-db instead of Redis
-CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = 'django-db'  # Store results in Django database
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+CELERY_TASK_SOFT_TIME_LIMIT = 25 * 60  # 25 minutes
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 100
+CELERY_TASK_ALWAYS_EAGER = os.getenv('CELERY_TASK_ALWAYS_EAGER', 'True') == 'True'  # Sync in dev
+
+# Celery Queue Routes
+CELERY_TASK_ROUTES = {
+    'ai_engine.tasks.process_text_to_text_task': {'queue': 'high_priority'},
+    'ai_engine.tasks.process_audio_to_text_task': {'queue': 'high_priority'},
+    'ai_engine.tasks.process_video_to_text_task': {'queue': 'high_priority'},
+    'ai_engine.tasks.process_translation_task': {'queue': 'high_priority'},
+    'ai_engine.tasks.create_dubbed_audio_task': {'queue': 'high_priority'},
+    'ai_engine.tasks.create_dubbed_video_task': {'queue': 'high_priority'},
+    'ai_engine.tasks.process_youtube_dubbing_task': {'queue': 'default'},
+    'ai_engine.tasks.process_subtitle_generation_task': {'queue': 'low_priority'},
+    'ai_engine.tasks.cleanup_old_jobs_task': {'queue': 'low_priority'},
+    'ai_engine.tasks.health_check_task': {'queue': 'scheduled'},
+    'accounts.tasks.reset_monthly_usage_task': {'queue': 'scheduled'},
+}
+
+# Queue priorities (0-9, higher = more urgent)
+CELERY_TASK_DEFAULT_PRIORITY = 5
+CELERY_TASK_QUEUE_MAX_PRIORITY = 10
 
 # Email Configuration
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')

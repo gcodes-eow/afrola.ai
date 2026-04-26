@@ -1,8 +1,5 @@
 # backend/ai_engine/callbacks.py
-
 import logging
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from jobs.models import Job
 from dashboard.models import RecentActivity
 
@@ -15,7 +12,6 @@ def on_task_success(job_id, result):
         job = Job.objects.get(id=job_id)
         logger.info(f"Job {job_id} completed successfully")
 
-        # Create activity log
         RecentActivity.objects.create(
             user=job.user,
             activity_type='job_completed',
@@ -37,7 +33,6 @@ def on_task_failure(job_id, exception, traceback):
         job.retry_count += 1
         job.save()
 
-        # Create activity log
         RecentActivity.objects.create(
             user=job.user,
             activity_type='job_failed',
