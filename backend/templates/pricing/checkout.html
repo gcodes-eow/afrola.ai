@@ -1,0 +1,47 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Checkout - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold mb-6">Complete Your Subscription</h1>
+
+        <div class="space-y-4">
+            <p class="text-gray-600">You selected the <strong>{{ plan.name }}</strong> plan.</p>
+            <p class="text-4xl font-bold">${{ plan.price }}<span class="text-lg text-gray-500">/{{ plan.billing_period }}</span></p>
+        </div>
+
+        <hr class="my-6">
+
+        <!-- Stripe Card Payment -->
+        {% if stripe_public_key %}
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold mb-4">Pay with Card</h2>
+            <a href="{% url 'payments:checkout' plan.id %}"
+               class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">
+                Pay with Stripe
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Mobile Money Options -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold mb-4">Pay with Mobile Money</h2>
+            <div class="space-y-3">
+                <button class="w-full border border-orange-500 text-orange-600 py-3 rounded-lg font-semibold hover:bg-orange-50">
+                    Pay with Airtel Money
+                </button>
+                <button class="w-full border border-yellow-500 text-yellow-600 py-3 rounded-lg font-semibold hover:bg-yellow-50">
+                    Pay with MTN Money
+                </button>
+            </div>
+        </div>
+
+        <p class="text-sm text-gray-500 text-center mt-4">
+            By subscribing, you agree to our terms and privacy policy.
+        </p>
+    </div>
+</div>
+{% endblock %}

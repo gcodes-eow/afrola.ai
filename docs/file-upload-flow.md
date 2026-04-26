@@ -31,7 +31,7 @@ text
 
 ### Dashboard App (Forms & Views)
 backend/dashboard/
-├── init.py # ✅
+├── __init__.py # ✅
 ├── forms.py # ⏳ MediaUploadForm, DubbingOptionsForm
 ├── views.py # ⏳ upload_media view, job_detail view
 ├── urls.py # ⏳ /upload/, /job/<id>/ routes
@@ -51,7 +51,7 @@ text
 
 ### Utilities
 backend/utils/
-├── init.py # ✅
+├── __init__.py # ✅
 ├── validators.py # ⏳ File validation functions
 ├── file_handlers.py # ⏳ File processing utilities
 ├── ffmpeg_utils.py # ⏳ Media metadata extraction

@@ -169,7 +169,6 @@ templates/accounts/verification_email.html
 
 Implementation:
 
-python
 # accounts/utils.py
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
@@ -239,7 +238,6 @@ LinkedIn (for enterprise)
 Batch 10: Session Security
 Settings for production:
 
-python
 SESSION_COOKIE_SECURE = True      # HTTPS only
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
@@ -253,7 +251,7 @@ django-allauth (optional, for social auth)
 No external packages needed for core auth (batteries included)
 
 Environment Variables
-bash
+
 # Email settings (for verification and password reset)
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 EMAIL_HOST=smtp.gmail.com

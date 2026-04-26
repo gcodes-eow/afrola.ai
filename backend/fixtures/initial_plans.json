@@ -1,0 +1,78 @@
+
+[
+    {
+        "model": "pricing.PricingPlan",
+        "pk": "00000000-0000-0000-0000-000000000001",
+        "fields": {
+            "name": "Free",
+            "tier": "free",
+            "billing_period": "monthly",
+            "price": 0,
+            "max_minutes_per_month": 60,
+            "max_file_size_mb": 100,
+            "max_jobs_per_month": 10,
+            "concurrent_jobs": 1,
+            "features": [
+                "60 minutes/month processing",
+                "100 MB max file size",
+                "10 jobs per month",
+                "Basic transcription",
+                "SRT subtitle export"
+            ],
+            "is_active": true
+        }
+    },
+    {
+        "model": "pricing.PricingPlan",
+        "pk": "00000000-0000-0000-0000-000000000002",
+        "fields": {
+            "name": "Pro",
+            "tier": "pro",
+            "billing_period": "monthly",
+            "price": 29.99,
+            "max_minutes_per_month": 600,
+            "max_file_size_mb": 500,
+            "max_jobs_per_month": 100,
+            "concurrent_jobs": 3,
+            "features": [
+                "600 minutes/month processing",
+                "500 MB max file size",
+                "100 jobs per month",
+                "Full transcription & translation",
+                "Audio dubbing (2 voices)",
+                "SRT/VTT subtitle export",
+                "Priority processing",
+                "API access"
+            ],
+            "is_active": true
+        }
+    },
+    {
+        "model": "pricing.PricingPlan",
+        "pk": "00000000-0000-0000-0000-000000000003",
+        "fields": {
+            "name": "Enterprise",
+            "tier": "enterprise",
+            "billing_period": "monthly",
+            "price": 99.99,
+            "max_minutes_per_month": 3000,
+            "max_file_size_mb": 2000,
+            "max_jobs_per_month": 500,
+            "concurrent_jobs": 10,
+            "features": [
+                "3000 minutes/month processing",
+                "2 GB max file size",
+                "500 jobs per month",
+                "Full transcription & translation",
+                "Audio & video dubbing (all voices)",
+                "Custom voice cloning",
+                "SRT/VTT subtitle export",
+                "Priority processing",
+                "API access",
+                "Team collaboration",
+                "Dedicated support"
+            ],
+            "is_active": true
+        }
+    }
+]

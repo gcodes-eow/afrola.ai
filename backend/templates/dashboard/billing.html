@@ -1,0 +1,94 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Billing - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Billing & Subscription</h1>
+
+    <!-- Current Plan -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Current Plan</h2>
+        {% if subscription %}
+            <div class="space-y-3">
+                <p><span class="font-medium">Plan:</span> {{ subscription.plan.name }} ({{ subscription.plan.get_tier_display }})</p>
+                <p><span class="font-medium">Status:</span>
+                    <span class="px-2 py-1 rounded text-sm {% if subscription.status == 'active' %}bg-green-100 text-green-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                        {{ subscription.get_status_display }}
+                    </span>
+                </p>
+                <p><span class="font-medium">Current Period:</span> {{ subscription.current_period_start|date:"M d, Y" }} — {{ subscription.current_period_end|date:"M d, Y" }}</p>
+                <p><span class="font-medium">Minutes Used:</span> {{ subscription.minutes_used_this_period }} / {{ subscription.plan.max_minutes_per_month }}</p>
+                <p><span class="font-medium">Jobs Used:</span> {{ subscription.jobs_used_this_period }} / {{ subscription.plan.max_jobs_per_month }}</p>
+
+                {% if subscription.cancel_at_period_end %}
+                    <p class="text-orange-600">Your subscription will be canceled at the end of the current period.</p>
+                {% else %}
+                    <form method="post" action="{% url 'payments:cancel_subscription' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-600 hover:underline text-sm">Cancel Subscription</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="text-gray-500">You don't have an active subscription. <a href="{% url 'pricing:index' %}" class="text-blue-600 hover:underline">View plans</a></p>
+        {% endif %}
+    </div>
+
+    <!-- Upgrade Options -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Available Plans</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for plan in plans %}
+                <div class="border rounded-lg p-4 {% if subscription and subscription.plan.id == plan.id %}border-blue-500 bg-blue-50{% endif %}">
+                    <h3 class="font-bold text-lg">{{ plan.name }}</h3>
+                    <p class="text-2xl font-bold my-2">${{ plan.price }}<span class="text-sm text-gray-500">/mo</span></p>
+                    {% if subscription and subscription.plan.id == plan.id %}
+                        <span class="text-blue-600 text-sm font-semibold">Current Plan</span>
+                    {% else %}
+                        <a href="{% url 'payments:checkout' plan.id %}" class="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm mt-2">
+                            Switch to {{ plan.name }}
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Payment History</h2>
+        {% if transactions %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="py-2 px-4">Date</th>
+                            <th class="py-2 px-4">Amount</th>
+                            <th class="py-2 px-4">Status</th>
+                            <th class="py-2 px-4">Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for txn in transactions %}
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-2 px-4">{{ txn.created_at|date:"M d, Y" }}</td>
+                            <td class="py-2 px-4">${{ txn.amount }}</td>
+                            <td class="py-2 px-4">
+                                <span class="px-2 py-1 rounded text-xs {% if txn.status == 'succeeded' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ txn.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="py-2 px-4">{{ txn.get_payment_method_display }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500">No payment history yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

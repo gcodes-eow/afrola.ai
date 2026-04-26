@@ -1,0 +1,33 @@
+
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold mb-4">Usage This Month</h2>
+
+    <div class="space-y-4">
+        <!-- Processing Minutes -->
+        <div>
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">Processing Minutes</span>
+                <span class="font-medium">{{ user.monthly_processing_seconds|floatformat:0 }}s / {{ subscription.plan.max_minutes_per_month|floatformat:0 }}m</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full" style="width: {% widthratio user.monthly_processing_seconds subscription.plan.max_minutes_per_month 100 %}%"></div>
+            </div>
+        </div>
+
+        <!-- Jobs -->
+        <div>
+            <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">Jobs This Month</span>
+                <span class="font-medium">{{ user.monthly_jobs_count }} / {{ subscription.plan.max_jobs_per_month }}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-green-600 h-2 rounded-full" style="width: {% widthratio user.monthly_jobs_count subscription.plan.max_jobs_per_month 100 %}%"></div>
+            </div>
+        </div>
+
+        <!-- Next Reset -->
+        <p class="text-xs text-gray-400 text-center mt-2">
+            Resets on {{ user.last_reset_date|date:"F j, Y"|default:"next month" }}
+        </p>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<!-- backend/templates/pricing/index.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pricing Plans - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-4">Choose Your Plan</h1>
+        <p class="text-xl text-gray-600">Start for free. Upgrade when you need more power.</p>
+    </div>
+
+    <!-- Plan Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% for plan in monthly_plans %}
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden {% if plan.tier == 'pro' %}border-2 border-blue-500 ring-2 ring-blue-200{% endif %}">
+            {% if plan.tier == 'pro' %}
+            <div class="bg-blue-600 text-white text-center py-2 text-sm font-semibold">MOST POPULAR</div>
+            {% endif %}
+
+            <div class="p-8">
+                <h2 class="text-2xl font-bold mb-2">{{ plan.name }}</h2>
+                <p class="text-gray-500 mb-6">{{ plan.get_tier_display }} tier</p>
+
+                <div class="mb-6">
+                    {% if plan.price == 0 %}
+                        <span class="text-5xl font-bold">Free</span>
+                    {% else %}
+                        <span class="text-5xl font-bold">${{ plan.price }}</span>
+                        <span class="text-gray-500">/{{ plan.billing_period }}</span>
+                    {% endif %}
+                </div>
+
+                <ul class="space-y-3 mb-8">
+                    {% for feature in plan.features %}
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-600">{{ feature }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                {% if user.is_authenticated %}
+                    {% if user.subscription_tier == plan.tier %}
+                        <button class="w-full bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold cursor-not-allowed" disabled>
+                            Current Plan
+                        </button>
+                    {% else %}
+                        <a href="{% url 'payments:checkout' plan.id %}"
+                           class="block w-full text-center {% if plan.tier == 'pro' %}bg-blue-600 hover:bg-blue-700 text-white{% elif plan.tier == 'enterprise' %}bg-purple-600 hover:bg-purple-700 text-white{% else %}bg-gray-200 hover:bg-gray-300 text-gray-800{% endif %} py-3 rounded-lg font-semibold">
+                            {% if plan.price == 0 %}Switch to Free{% else %}Upgrade to {{ plan.name }}{% endif %}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'accounts:register' %}"
+                       class="block w-full text-center {% if plan.tier == 'pro' %}bg-blue-600 hover:bg-blue-700 text-white{% else %}bg-gray-200 hover:bg-gray-300 text-gray-800{% endif %} py-3 rounded-lg font-semibold">
+                        Get Started
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Yearly Plans -->
+    {% if yearly_plans %}
+    <div class="mt-16">
+        <h2 class="text-3xl font-bold text-center mb-8">Yearly Plans — Save up to 20%</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for plan in yearly_plans %}
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h3 class="text-xl font-bold mb-2">{{ plan.name }}</h3>
+                <div class="mb-6">
+                    <span class="text-4xl font-bold">${{ plan.price }}</span>
+                    <span class="text-gray-500">/year</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    {% for feature in plan.features %}
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-gray-600">{{ feature }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'payments:checkout' plan.id %}"
+                   class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold">
+                    Choose {{ plan.name }}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

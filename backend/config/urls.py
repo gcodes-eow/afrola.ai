@@ -11,6 +11,9 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('api/', include('api.urls', namespace='api')),
+    path('payments/', include('payments.urls', namespace='payments')),
+    path('pricing/', include('pricing.urls', namespace='pricing')),
+    path('billing/', include('payments.urls', namespace='billing')),
     path('', RedirectView.as_view(url='/dashboard/', permanent=False), name='home'),
 ]
 

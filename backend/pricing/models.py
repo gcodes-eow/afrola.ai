@@ -42,7 +42,7 @@ class PricingPlan(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['tier', 'billing_period']
+        ordering = ['price', 'billing_period']
 
     def __str__(self):
         return f"{self.name} ({self.get_tier_display()}) - ${self.price}/{self.billing_period}"

@@ -12,7 +12,12 @@
                 {% if user.is_authenticated %}
                     <a href="{% url 'dashboard:index' %}" class="text-gray-700 hover:text-blue-600">Dashboard</a>
                     <a href="{% url 'accounts:profile' %}" class="text-gray-700 hover:text-blue-600">Profile</a>
-                    <span class="text-sm text-gray-500 hidden md:inline">{{ user.first_name }} {{ user.last_name }}</span>
+                    <span class="text-sm text-gray-500 hidden md:inline">{{ user.email }}</span>
+                    {% if user.subscription_tier == 'free' %}
+                    <a href="{% url 'pricing:index' %}" class="bg-purple-600 text-white px-3 py-1.5 rounded-lg hover:bg-purple-700 text-sm font-medium">
+                        Upgrade
+                    </a>
+                    {% endif %}
                     <a href="{% url 'dashboard:upload_media' %}" class="bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 text-sm font-medium">
                         + Upload Media
                     </a>
@@ -21,6 +26,7 @@
                         <button type="submit" class="text-red-600 hover:text-red-800">Logout</button>
                     </form>
                 {% else %}
+                    <a href="{% url 'pricing:index' %}" class="text-gray-700 hover:text-blue-600">Pricing</a>
                     <a href="{% url 'accounts:login' %}" class="text-gray-700 hover:text-blue-600">Login</a>
                     <a href="{% url 'accounts:register' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Register</a>
                 {% endif %}
