@@ -6,9 +6,10 @@ from jobs.models import Job
 
 
 class MediaUploadForm(forms.Form):
-    """Form for uploading media files or YouTube URLs with dubbing options"""
+    """Form for uploading media files, text, or YouTube URLs with dubbing options"""
 
     INPUT_TYPE_CHOICES = [
+        ('text', 'Text Input'),
         ('file', 'File Upload'),
         ('youtube', 'YouTube URL'),
     ]
@@ -39,6 +40,15 @@ class MediaUploadForm(forms.Form):
         ],
         initial='en',
         widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    source_text = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 5,
+            'placeholder': 'Enter text to translate...',
+        }),
+        help_text='Free: 1,000 chars | Pro: 50,000 chars | Enterprise: Unlimited'
     )
     source_file = forms.FileField(
         required=False,
@@ -99,10 +109,18 @@ class MediaUploadForm(forms.Form):
         input_type = cleaned_data.get('input_type')
         source_file = cleaned_data.get('source_file')
         youtube_url = cleaned_data.get('youtube_url')
+        source_text = cleaned_data.get('source_text')
 
-        if input_type == 'file' and not source_file:
-            self.add_error('source_file', 'Please select a file to upload.')
-        elif input_type == 'youtube' and not youtube_url:
-            self.add_error('youtube_url', 'Please enter a YouTube URL.')
+        if input_type == 'text':
+            if not source_text:
+                self.add_error('source_text', 'Please enter text to translate.')
+            # Auto-set job_type to text_to_text for text input
+            cleaned_data['job_type'] = 'text_to_text'
+        elif input_type == 'file':
+            if not source_file:
+                self.add_error('source_file', 'Please select a file to upload.')
+        elif input_type == 'youtube':
+            if not youtube_url:
+                self.add_error('youtube_url', 'Please enter a YouTube URL.')
 
         return cleaned_data

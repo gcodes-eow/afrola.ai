@@ -4,19 +4,21 @@ from django.utils import timezone
 
 
 def create_job_record(user, job_type, source_language, target_language,
-                      source_file=None, youtube_url=None, output_types=None,
-                      duration=None, file_size=None, voice_model=None,
-                      add_background_music=False, background_music_file=None,
-                      music_volume=0.3, preserve_timestamps=True):
+                      source_file=None, youtube_url=None, source_text=None,
+                      output_types=None, duration=None, file_size=None,
+                      voice_model=None, add_background_music=False,
+                      background_music_file=None, music_volume=0.3,
+                      preserve_timestamps=True):
     """Create a new job record in the database"""
     from jobs.models import Job
 
-    # Auto-generate title
     title = ''
     if source_file:
-        title = source_file.name.split('/')[-1]
+        title = source_file.name.split('/')[-1] if hasattr(source_file, 'name') else str(source_file)
     elif youtube_url:
         title = 'YouTube Video'
+    elif source_text:
+        title = source_text[:100]
 
     job = Job.objects.create(
         user=user,
@@ -27,6 +29,7 @@ def create_job_record(user, job_type, source_language, target_language,
         target_language=target_language,
         source_file=source_file,
         youtube_url=youtube_url,
+        source_text=source_text or '',
         duration=duration,
         file_size=file_size,
         voice_model=voice_model,
@@ -37,7 +40,6 @@ def create_job_record(user, job_type, source_language, target_language,
         status='pending',
     )
 
-    # Log activity
     from dashboard.models import RecentActivity
     RecentActivity.objects.create(
         user=user,
@@ -72,7 +74,6 @@ def update_job_status(job, status, error_message='', processing_time=None):
         'error_message', 'processing_time'
     ])
 
-    # Log activity
     from dashboard.models import RecentActivity
     activity_map = {
         'completed': 'job_completed',

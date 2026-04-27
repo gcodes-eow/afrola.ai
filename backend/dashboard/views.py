@@ -1,5 +1,4 @@
 # backend/dashboard/views.py
-
 import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -29,12 +28,11 @@ def index(request):
 
 @login_required
 def upload_media(request):
-    """Handle media upload and YouTube URL submission"""
+    """Handle media upload, text input, and YouTube URL submission"""
     if request.method == 'POST':
         form = MediaUploadForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             try:
-                # Determine input type
                 input_type = form.cleaned_data['input_type']
                 job_type = form.cleaned_data['job_type']
                 source_language = form.cleaned_data['source_language']
@@ -42,18 +40,28 @@ def upload_media(request):
 
                 source_file = None
                 youtube_url = None
+                source_text = None
                 duration = None
                 file_size = None
 
-                if input_type == 'file':
+                if input_type == 'text':
+                    source_text = form.cleaned_data['source_text']
+
+                    # Enforce character limits by tier
+                    text_limits = {'free': 1000, 'pro': 50000, 'enterprise': None}
+                    char_limit = text_limits.get(request.user.subscription_tier, 1000)
+
+                    if char_limit and len(source_text) > char_limit:
+                        messages.error(request, f'Text too long. Maximum {char_limit:,} characters for your plan. Upgrade for more.')
+                        return render(request, 'dashboard/upload.html', {'form': form})
+
+                elif input_type == 'file':
                     uploaded_file = request.FILES['source_file']
 
-                    # Validate file type
                     if not validate_file_type(uploaded_file.name, job_type):
                         messages.error(request, 'Unsupported file format. Please use supported formats.')
                         return render(request, 'dashboard/upload.html', {'form': form})
 
-                    # Validate file size based on subscription tier
                     if not validate_file_size(uploaded_file.size, request.user.subscription_tier):
                         max_size = settings.FREE_MAX_UPLOAD_SIZE_MB
                         if request.user.subscription_tier == 'pro':
@@ -63,15 +71,12 @@ def upload_media(request):
                         messages.error(request, f'File too large. Maximum {max_size}MB for your plan. Upgrade for larger files.')
                         return render(request, 'dashboard/upload.html', {'form': form})
 
-                    # Save file
                     source_file = save_uploaded_file(uploaded_file, request.user.id)
                     file_size = uploaded_file.size
 
-                    # Extract duration
                     file_path = os.path.join(settings.MEDIA_ROOT, source_file.name)
                     duration = get_media_duration(file_path)
 
-                    # Validate duration based on tier
                     if duration:
                         max_duration = settings.FREE_MAX_DURATION_SECONDS
                         if request.user.subscription_tier == 'pro':
@@ -86,17 +91,14 @@ def upload_media(request):
                 elif input_type == 'youtube':
                     youtube_url = form.cleaned_data['youtube_url']
 
-                    # Validate YouTube URL
                     if not validate_youtube_url(youtube_url):
                         messages.error(request, 'Invalid YouTube URL. Please enter a valid YouTube video link.')
                         return render(request, 'dashboard/upload.html', {'form': form})
 
-                # Build output types list
                 output_types = form.cleaned_data.get('output_types', [])
                 if not output_types:
-                    output_types = ['transcript', 'translation']  # Default outputs
+                    output_types = ['transcript', 'translation']
 
-                # Create job record
                 job = create_job_record(
                     user=request.user,
                     job_type=job_type,
@@ -104,6 +106,7 @@ def upload_media(request):
                     target_language=target_language,
                     source_file=source_file,
                     youtube_url=youtube_url,
+                    source_text=source_text,
                     output_types=output_types,
                     duration=duration,
                     file_size=file_size,

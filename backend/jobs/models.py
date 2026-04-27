@@ -48,6 +48,7 @@ class Job(models.Model):
     # Input
     source_file = models.FileField(upload_to='uploads/%Y/%m/%d/', null=True, blank=True)
     youtube_url = models.URLField(null=True, blank=True)
+    source_text = models.TextField(blank=True, help_text="Source text for text-to-text translation")
     source_language = models.CharField(max_length=10, default='lg')
     target_language = models.CharField(max_length=10, default='en')
     
@@ -101,7 +102,6 @@ class Job(models.Model):
         if self.status == 'completed':
             return 100
         elif self.status == 'processing':
-            # Could be enhanced with task-specific progress
             return 50
         elif self.status == 'queued':
             return 25
@@ -125,7 +125,7 @@ class Job(models.Model):
     
     @property
     def requires_transcription(self):
-        """Check if transcription is needed"""
+        """Check if transcription is needed (text_to_text does not)"""
         return self.job_type in [
             'audio_to_text', 'video_to_text', 
             'audio_to_audio', 'video_to_audio', 
@@ -157,18 +157,17 @@ class Job(models.Model):
         return outputs
     
     def save(self, *args, **kwargs):
-        # Auto-calculate duration from file if not set
-        if self.source_file and not self.duration and self.source_file.name:
-            # Will be set during processing
-            pass
-        
-        # Set default title if not provided
-        if not self.title and self.source_file:
-            self.title = self.source_file.name.split('/')[-1]
-        elif not self.title and self.youtube_url:
-            self.title = "YouTube Video"
+        """Auto-set title from input source if not provided"""
+        if not self.title:
+            if self.source_file:
+                self.title = self.source_file.name.split('/')[-1]
+            elif self.youtube_url:
+                self.title = "YouTube Video"
+            elif self.source_text:
+                self.title = self.source_text[:100]
         
         super().save(*args, **kwargs)
+
 
 class FailedTask(models.Model):
     """Store failed tasks for manual review and retry"""

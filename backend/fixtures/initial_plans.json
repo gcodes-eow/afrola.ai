@@ -1,4 +1,3 @@
-
 [
     {
         "model": "pricing.PricingPlan",
@@ -13,6 +12,7 @@
             "max_jobs_per_month": 10,
             "concurrent_jobs": 1,
             "features": [
+                "Basic text-to-text translation (1,000 chars)",
                 "60 minutes/month processing",
                 "100 MB max file size",
                 "10 jobs per month",
@@ -35,6 +35,7 @@
             "max_jobs_per_month": 100,
             "concurrent_jobs": 3,
             "features": [
+                "Full text-to-text translation (50,000 chars)",
                 "600 minutes/month processing",
                 "500 MB max file size",
                 "100 jobs per month",
@@ -60,6 +61,7 @@
             "max_jobs_per_month": 500,
             "concurrent_jobs": 10,
             "features": [
+                "Unlimited text-to-text translation",
                 "3000 minutes/month processing",
                 "2 GB max file size",
                 "500 jobs per month",
