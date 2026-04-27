@@ -13,7 +13,7 @@ def subscription_required(tier):
             if not request.user.is_authenticated:
                 raise PermissionDenied
 
-            tier_hierarchy = {'free': 0, 'pro': 1, 'enterprise': 2}
+            tier_hierarchy = {'free': 0, 'pro': 1, 'business': 2}
             user_tier = request.user.subscription_tier
 
             if tier_hierarchy.get(user_tier, 0) < tier_hierarchy.get(tier, 0):

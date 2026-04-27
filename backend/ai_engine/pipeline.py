@@ -214,7 +214,7 @@ def get_queue_for_user(user):
         return 'default'
 
     tier = user.subscription_tier
-    if tier in ('pro', 'enterprise'):
+    if tier in ('pro', 'business'):
         return 'high_priority'
     return 'default'
 
@@ -230,7 +230,7 @@ def get_priority_for_tier(subscription_tier):
     Higher number = higher priority.
     """
     priorities = {
-        'enterprise': 9,
+        'business': 9,
         'pro': 7,
         'free': 3,
     }

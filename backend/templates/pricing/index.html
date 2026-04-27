@@ -51,7 +51,7 @@
                         </button>
                     {% else %}
                         <a href="{% url 'payments:checkout' plan.id %}"
-                           class="block w-full text-center {% if plan.tier == 'pro' %}bg-blue-600 hover:bg-blue-700 text-white{% elif plan.tier == 'enterprise' %}bg-purple-600 hover:bg-purple-700 text-white{% else %}bg-gray-200 hover:bg-gray-300 text-gray-800{% endif %} py-3 rounded-lg font-semibold">
+                           class="block w-full text-center {% if plan.tier == 'pro' %}bg-blue-600 hover:bg-blue-700 text-white{% elif plan.tier == 'business' %}bg-purple-600 hover:bg-purple-700 text-white{% else %}bg-gray-200 hover:bg-gray-300 text-gray-800{% endif %} py-3 rounded-lg font-semibold">
                             {% if plan.price == 0 %}Switch to Free{% else %}Upgrade to {{ plan.name }}{% endif %}
                         </a>
                     {% endif %}

@@ -48,7 +48,7 @@ class MediaUploadForm(forms.Form):
             'rows': 5,
             'placeholder': 'Enter text to translate...',
         }),
-        help_text='Free: 1,000 chars | Pro: 50,000 chars | Enterprise: Unlimited'
+        help_text='Free: 1,000 chars | Pro: 50,000 chars | Business: Unlimited'
     )
     source_file = forms.FileField(
         required=False,

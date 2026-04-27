@@ -7,7 +7,7 @@ def get_plan_features(plan):
             '60 minutes/month processing',
             '100 MB max file size',
             '10 jobs per month',
-            'Basic transcription',
+            'Basic transcription & translation',
             'SRT subtitle export',
         ],
         'pro': [
@@ -20,7 +20,7 @@ def get_plan_features(plan):
             'Priority processing',
             'API access',
         ],
-        'enterprise': [
+        'business': [
             '3000 minutes/month processing',
             '2 GB max file size',
             'Unlimited jobs',

@@ -9,7 +9,7 @@ class PricingPlan(models.Model):
     TIER_CHOICES = [
         ('free', 'Free'),
         ('pro', 'Pro'),
-        ('enterprise', 'Enterprise'),
+        ('business', 'Business'),
     ]
 
     BILLING_PERIODS = [

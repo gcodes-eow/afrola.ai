@@ -17,7 +17,7 @@ def user_subscription_info(request):
             'subscription_tier': request.user.subscription_tier,
             'is_free_tier': request.user.subscription_tier == 'free',
             'is_pro_tier': request.user.subscription_tier == 'pro',
-            'is_enterprise_tier': request.user.subscription_tier == 'enterprise',
+            'is_business_tier': request.user.subscription_tier == 'business',
         })
 
         if subscription:

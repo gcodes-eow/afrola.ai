@@ -20,7 +20,7 @@ class User(AbstractUser):
         choices=[
             ('free', 'Free'),
             ('pro', 'Pro'),
-            ('enterprise', 'Enterprise')
+            ('business', 'Business')
         ],
         default='free'
     )

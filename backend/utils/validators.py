@@ -19,7 +19,7 @@ def validate_file_size(file_size_bytes, subscription_tier):
     limits = {
         'free': settings.FREE_MAX_UPLOAD_SIZE_MB,
         'pro': settings.PRO_MAX_UPLOAD_SIZE_MB,
-        'enterprise': settings.ENTERPRISE_MAX_UPLOAD_SIZE_MB,
+        'business': settings.BUSINESS_MAX_UPLOAD_SIZE_MB,
     }
     max_size_bytes = limits.get(subscription_tier, settings.FREE_MAX_UPLOAD_SIZE_MB) * 1024 * 1024
     return file_size_bytes <= max_size_bytes
@@ -41,7 +41,7 @@ def validate_duration(duration_seconds, subscription_tier):
     limits = {
         'free': settings.FREE_MAX_DURATION_SECONDS,
         'pro': settings.PRO_MAX_DURATION_SECONDS,
-        'enterprise': settings.ENTERPRISE_MAX_DURATION_SECONDS,
+        'business': settings.BUSINESS_MAX_DURATION_SECONDS,
     }
     max_duration = limits.get(subscription_tier, settings.FREE_MAX_DURATION_SECONDS)
     return duration_seconds <= max_duration

@@ -8,9 +8,8 @@ class SubscriptionPlan(models.Model):
     """Available subscription plans for users"""
     PLAN_TIERS = [
         ('free', 'Free'),
-        ('basic', 'Basic'),
         ('pro', 'Pro'),
-        ('enterprise', 'Enterprise'),
+        ('business', 'Business'),
     ]
     
     BILLING_PERIODS = [

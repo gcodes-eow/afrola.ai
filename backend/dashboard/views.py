@@ -48,7 +48,7 @@ def upload_media(request):
                     source_text = form.cleaned_data['source_text']
 
                     # Enforce character limits by tier
-                    text_limits = {'free': 1000, 'pro': 50000, 'enterprise': None}
+                    text_limits = {'free': 1000, 'pro': 50000, 'business': None}
                     char_limit = text_limits.get(request.user.subscription_tier, 1000)
 
                     if char_limit and len(source_text) > char_limit:
@@ -66,8 +66,8 @@ def upload_media(request):
                         max_size = settings.FREE_MAX_UPLOAD_SIZE_MB
                         if request.user.subscription_tier == 'pro':
                             max_size = settings.PRO_MAX_UPLOAD_SIZE_MB
-                        elif request.user.subscription_tier == 'enterprise':
-                            max_size = settings.ENTERPRISE_MAX_UPLOAD_SIZE_MB
+                        elif request.user.subscription_tier == 'business':
+                            max_size = settings.BUSINESS_MAX_UPLOAD_SIZE_MB
                         messages.error(request, f'File too large. Maximum {max_size}MB for your plan. Upgrade for larger files.')
                         return render(request, 'dashboard/upload.html', {'form': form})
 
@@ -81,8 +81,8 @@ def upload_media(request):
                         max_duration = settings.FREE_MAX_DURATION_SECONDS
                         if request.user.subscription_tier == 'pro':
                             max_duration = settings.PRO_MAX_DURATION_SECONDS
-                        elif request.user.subscription_tier == 'enterprise':
-                            max_duration = settings.ENTERPRISE_MAX_DURATION_SECONDS
+                        elif request.user.subscription_tier == 'business':
+                            max_duration = settings.BUSINESS_MAX_DURATION_SECONDS
 
                         if duration > max_duration:
                             messages.error(request, f'File too long ({int(duration)}s). Maximum {max_duration}s for your plan. Upgrade for longer files.')
