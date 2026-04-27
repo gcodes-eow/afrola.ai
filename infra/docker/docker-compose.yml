@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: afrola
+      POSTGRES_USER: afrola
+      POSTGRES_PASSWORD: afrola_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  celery:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.celery
+    command: celery -A config worker --loglevel=info --concurrency=4 --queues=high_priority,default,low_priority
+    volumes:
+      - ../../backend:/app/backend
+      - ../../ai:/app/ai
+      - ../../storage:/app/storage
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=django-db
+      - CELERY_TASK_ALWAYS_EAGER=False
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  celery-beat:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.celery
+    command: celery -A config beat --loglevel=info --scheduler=django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - ../../backend:/app/backend
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  flower:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.celery
+    command: celery -A config flower --port=5555 --basic_auth=admin:afrola2024
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

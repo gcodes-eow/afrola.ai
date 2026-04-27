@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from config.logging import LOGGING
 
 # Load environment variables
 load_dotenv()
@@ -281,53 +282,6 @@ CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
-
-# Logging
-LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
-DJANGO_LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL', 'INFO')
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'level': LOG_LEVEL,
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'afrola.log',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': LOG_LEVEL,
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': DJANGO_LOG_LEVEL,
-            'propagate': False,
-        },
-        'django.request': {
-            'handlers': ['console', 'file'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-    },
-}
 
 # API Configuration
 API_RATE_LIMIT_PER_MINUTE = int(os.getenv('API_RATE_LIMIT_PER_MINUTE', 60))

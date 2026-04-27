@@ -54,7 +54,7 @@ AFROLA/
 │       ├── video_pipeline.py
 │       └── youtube_pipeline.py
 │
-├── backend/                              # Django project root
+├── backend/                       # Django project root
 │   ├── manage.py
 │   ├── requirements.txt
 │   ├── .env
@@ -68,7 +68,7 @@ AFROLA/
 │   │   ├── asgi.py
 │   │   └── celery.py
 │   │
-│   ├── accounts/                        # User management
+│   ├── accounts/                 # User management
 │   │   ├── __init__.py
 │   │   ├── admin.py
 │   │   ├── apps.py

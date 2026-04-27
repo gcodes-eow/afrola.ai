@@ -17,6 +17,7 @@ class Job(models.Model):
     # Extended job types for full dubbing capabilities
     TYPE_CHOICES = [
         # Text/Subtitle outputs
+        ('text_to_text', 'Text → Text'),
         ('audio_to_text', 'Audio → Text'),
         ('video_to_text', 'Video → Text'),
         # Audio dubbing
@@ -168,3 +169,39 @@ class Job(models.Model):
             self.title = "YouTube Video"
         
         super().save(*args, **kwargs)
+
+class FailedTask(models.Model):
+    """Store failed tasks for manual review and retry"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    task_id = models.CharField(max_length=255, unique=True, help_text="Celery task ID")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='failed_tasks')
+    task_name = models.CharField(max_length=255, help_text="Name of the Celery task")
+    error = models.TextField(help_text="Error message")
+    traceback = models.TextField(blank=True, help_text="Full traceback")
+    retry_count = models.IntegerField(default=0)
+    resolved = models.BooleanField(default=False, help_text="Whether the issue has been resolved")
+    resolved_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='resolved_tasks'
+    )
+    resolution_notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Failed Task"
+        verbose_name_plural = "Failed Tasks"
+
+    def __str__(self):
+        return f"Failed: {self.task_name} - Job {self.job.id}"
+
+    def resolve(self, user, notes=''):
+        """Mark this failed task as resolved"""
+        self.resolved = True
+        self.resolved_by = user
+        self.resolution_notes = notes
+        self.save()
